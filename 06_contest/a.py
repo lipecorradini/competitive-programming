@@ -1,72 +1,44 @@
-factors = dict()
+# algorithm largely based on https://stackoverflow.com/questions/27336269/how-to-optimize-factorization-code-in-python
 
-# algrithm largely based on https://www.rookieslab.com/posts/fastest-way-to-check-if-a-number-is-prime-or-not
+def factors(n):
+    fs = []
 
-def is_prime(n):
-    """
-    Assumes that n is a positive natural number
-    """
-    # We know 1 is not a prime number
-    if n == 1:
-        return False
+    # remove 2
+    while n % 2 == 0:
+        fs.append(2)
+        n //= 2
+    
+    # now deal odds
+    f = 3
+    while f * f <= n:
+        while n % f == 0:
+            fs.append(f)
+            n //= f
+        f += 2 
+    if n > 1:
+        fs.append(n)
+    return fs
 
-    i = 2
-    # This will loop from 2 to int(sqrt(x))
-    while i*i <= n:
-        # Check if i divides x without leaving a remainder
-        if n % i == 0:
-            # This means that n has a factor in between 2 and sqrt(n)
-            # So it is not a prime number
-            return False
-        i += 1
-    # If we did not find any factor in the above loop,
-    # then n is a prime number
-    return True
-
-def factorize(n):
-    """
-    Assumes that n is a positive natural number
-    """
-    if n == 1:
-        return False
-
-    i = 2
-    while i*i <= n:
-
-        if n == i:
-            break
-
-        while n % i == 0:
-
-            if i not in factors.keys():
-                factors[i] = 1
-                if is_prime(n//i):
-                    n = (n//i)
-                    factors[n//i] = 1
-                    return
-            else:
-                factors[i] += 1
-               
-
-            n = (n // i)
-        i += 1
-
-    factors[n] = 1
 
 
 def main():
+    
     while True:
         n = int(input())
         if n == 0: return
 
-        global factors
-        factors.clear()
+        factor = factors(n)
+        
+        if not factor:
+            print()
+            continue
 
-        factorize(n)
-        # print(factors.keys())
-        for exp in factors.keys():
-            print(f"{exp}^{factors[exp]}", end = " ")
-        print()
+        factor_counts = {}
+        for exp in factor:
+            factor_counts[exp] = factor_counts.get(exp, 0) + 1
+
+        output = ' '.join([f"{int(prime)}^{count}" for prime, count in sorted(factor_counts.items())])
+        print(output)
 
 main()
 

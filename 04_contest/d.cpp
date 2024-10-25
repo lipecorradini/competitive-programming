@@ -20,6 +20,7 @@ void add_bignum(bignum *a, bignum *b, bignum *c);
 void ll_to_bignum(ll s, bignum *n) {
     int i; /* counter */
     ll t; /* auxiliary */
+
     if (s >= 0) n->signbit = PLUS;
     else n->signbit = MINUS;
 
@@ -36,6 +37,7 @@ void ll_to_bignum(ll s, bignum *n) {
 
     if (s == 0) n->lastdigit = 0;
 }
+
 
 void zero_justify(bignum *n) {
     while ((n->lastdigit > 0) && (n->digits[n->lastdigit] == 0))
@@ -167,7 +169,15 @@ void multiply_bignum(bignum *a, bignum *b, bignum *c) {
     zero_justify(c);
 }
 
-void divide_bignum(bignum *a, bignum *b, bignum *c) {
+void print_bignum(bignum *a){
+    for(int i = 0 ; i < a->lastdigit; i++){
+        cout << a->digits[i];
+    }
+    cout << endl;
+}
+
+
+void divide_bignum(bignum *a, bignum *b, bignum *c, bignum *r) {
     bignum row; /* represents shifted row */
     bignum tmp; /* placeholder bignum */
     int asign, bsign; /* temporary signs */
@@ -176,6 +186,7 @@ void divide_bignum(bignum *a, bignum *b, bignum *c) {
     initialize_bignum(c);
     initialize_bignum(&row);
     initialize_bignum(&tmp);
+    initialize_bignum(r);
 
     c->lastdigit = a->lastdigit;
     c->signbit = a->signbit * b->signbit;
@@ -193,6 +204,10 @@ void divide_bignum(bignum *a, bignum *b, bignum *c) {
         }
     }
     zero_justify(c);
+    *r = row;
+    zero_justify(r);
+    print_bignum(r);
+
     a->signbit = asign;
     b->signbit = bsign;
 }
@@ -208,12 +223,7 @@ void string_to_bignum(string s, bignum *a){
     a->signbit = PLUS;
 }
 
-void print_bignum(bignum *a){
-    for(int i = 0 ; i < a->lastdigit; i++){
-        cout << a->digits[i];
-    }
-    cout << endl;
-}
+
 
 int main(){
     ios::sync_with_stdio(false);
@@ -222,10 +232,7 @@ int main(){
     int q; cin >> q;
 
     while(q--){
-        bignum *a = new bignum();
-        bignum *b = new bignum();
-        bignum *c;
-        bignum *d;
+        bignum p_string, n_int;
 
         string p;
         long long n;
@@ -233,15 +240,18 @@ int main(){
         cin >> n;
         cin >> p;
 
-        ll_to_bignum(n, b);
-        string_to_bignum(p, a);
+        ll_to_bignum(n, &n_int);
+        string_to_bignum(p, &p_string);
 
-        divide_bignum(a, b, c);
-        cout << "2nd\n";
-        multiply_bignum(b, c, d); // d é o produto de a e c
-        subtract_bignum(d, a, b); // b tem o resto
+        print_bignum(&n_int);
+        print_bignum(&p_string);
 
-        print_bignum(b);
+        bignum resto, outro;
+
+        divide_bignum(&p_string, &n_int, &outro, &resto);
+        print_bignum(&resto);
+
+
 
     }
 

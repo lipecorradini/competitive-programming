@@ -1,37 +1,29 @@
 #include <bits/stdc++.h>
-#include <string>
 using namespace std;
 
-#define MAXDIGITS 100000
-int main() {
-   ios::sync_with_stdio(false);
-   cin.tie(0);
+typedef long long ll;
 
-    string palavra;
-    cin >> palavra;
-
-    int ini = 0; int final = 0;
-    set<char> curr;
-
-    int tam = palavra.length();
-    int cont = 0, curr_size = 0;
-
-    for(int i = 0; i < tam; i++){
-        while(curr.find(palavra[final]) == curr.end() && final < tam){
-            curr.insert(palavra[final]);
-            cont += curr.size();
-            // cout << endl << "tamanho: " << curr.size() << endl;
-            final ++;
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    string S;
+    cin >> S;
+    int n = S.length();
+    int last[26];
+    for(int i=0;i<26;i++) last[i] = -1; //inicializo com -1
+    
+    ll total = 0;
+    int start = 0;
+    
+    for(int end = 0; end < n; end++){
+        int charIdx = S[end] - 'a';
+        if(last[charIdx] >= start){
+            start = last[charIdx] + 1; // comeca no proximo caractere
         }
-
-        if(final <= tam - 1){
-            ini ++;
-            final = ini;
-            i = ini;
-            curr.clear();
-            cont --;
-        }
-        
+        last[charIdx] = end; // atualiza ultima aparixcao
+        total += (end - start + 1); //adicioa numero novo de substrings
     }
-    cout << cont << '\n';
+    
+    cout << total << endl;
 }
