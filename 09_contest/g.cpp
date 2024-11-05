@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define MAX 40001
+#define MAX 400001
 // The functions above are largely based on the slides of the discipline
 
 
@@ -57,11 +57,6 @@ int main() {
     // cout << lps[M - 1] << endl;
 
     if(max_0 > ini_final) ini_final = 0; 
-
-    // for(int i = 0; i < M; i++){
-    //     cout << "i: " << i << ") lps: " << lps[i] << " " << input[i] << endl;
-
-    // }
 
     ini_final --;
     // cout << ini_final << endl;
